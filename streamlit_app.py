@@ -95,7 +95,6 @@ for i in range(len(grid)):
             if (cur_idx >= len(result_images)):
                 continue
             st.image(result_images[cur_idx])
-            # st.checkbox("Check me", key=f"r-{cur_idx}")
 
 
 
