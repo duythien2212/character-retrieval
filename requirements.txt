@@ -1,2 +1,2 @@
 streamlit
-streamlit-imagegrid
+streamlit_image_select
