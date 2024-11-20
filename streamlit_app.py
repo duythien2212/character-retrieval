@@ -49,6 +49,8 @@ query_images = ["images/cat1.jpeg",
           "images/cat1.jpeg",
           "images/cat1.jpeg"]
 
+img_names = [img.split('/')[-1].split('.')[0] for img in query_images]
+
 # row_len = [col_size for i in range(math.ceil(len(images)/col_size))]
 # st.write(row_len)
 
@@ -65,7 +67,7 @@ for i in range(len(grid)):
             if (cur_idx >= len(query_images)):
                 continue
             st.image(query_images[cur_idx])
-            is_selected[cur_idx] = st.checkbox("Check me", key=f"q-{cur_idx}")
+            is_selected[cur_idx] = st.checkbox(img_names[cur_idx], key=f"q-{cur_idx}")
 
 st.write(is_selected)
 
@@ -93,7 +95,7 @@ for i in range(len(grid)):
             if (cur_idx >= len(result_images)):
                 continue
             st.image(result_images[cur_idx])
-            st.checkbox("Check me", key=f"r-{cur_idx}")
+            # st.checkbox("Check me", key=f"r-{cur_idx}")
 
 
 
