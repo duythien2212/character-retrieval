@@ -1,2 +1,8 @@
 streamlit
 streamlit_image_select
+faiss-cpu
+deepface
+CLIP @ git+https://github.com/openai/CLIP.git
+matplotlib
+scikit-learn
+transformers

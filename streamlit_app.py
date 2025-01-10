@@ -1,24 +1,41 @@
 import streamlit as st
 from streamlit_image_select import image_select
 import math
+import os
+import torch
+from deepface import DeepFace
+from PIL import Image
+import pandas as pd
+import numpy as np
+import faiss
+from sklearn.cluster import DBSCAN
+from sklearn.metrics.pairwise import cosine_similarity
+import pickle
+import matplotlib.pyplot as plt
+from collections import Counter
+from sklearn.metrics import auc
+
+query_path = "./query"
 
 # Sidebar
 with st.sidebar:
     st.write("Select input image query")
     
     # Select movie
-    movies = ["Movie 1", "Movie 2"]
+    movies = os.listdir(query_path)
     selected_movie = st.selectbox(
         "Select movie",
         movies,
     )
+    movie_path = os.path.join(query_path, selected_movie)
 
     # Select character 
-    characters = ["Character 1", "Character 2", "Character 3"]
+    characters = os.listdir(movie_path)
     selected_character = st.selectbox(
         "Select character",
         characters,
     )
+    character_path = os.path.join(movie_path, selected_character)
 
     # Select face feature types
     face_feature_types = ["Facenet", "Arcface"]
@@ -41,15 +58,10 @@ st.write("Movie character retrieval based on image examples")
 
 st.subheader("Image query")
 
-query_images = ["images/cat1.jpeg", 
-          "images/cat1.jpeg", 
-          "images/cat1.jpeg", 
-          "images/cat1.jpeg", 
-          "images/cat1.jpeg", 
-          "images/cat1.jpeg",
-          "images/cat1.jpeg"]
+query_image_names = os.listdir(character_path)
+query_images = [os.path.join(character_path, img_name) for img_name in query_image_names]
 
-img_names = [img.split('/')[-1].split('.')[0] for img in query_images]
+# img_names = [img.split('/')[-1].split('.')[0] for img in query_images]
 
 # row_len = [col_size for i in range(math.ceil(len(images)/col_size))]
 # st.write(row_len)
@@ -67,7 +79,7 @@ for i in range(len(grid)):
             if (cur_idx >= len(query_images)):
                 continue
             st.image(query_images[cur_idx])
-            is_selected[cur_idx] = st.checkbox(img_names[cur_idx], key=f"q-{cur_idx}")
+            is_selected[cur_idx] = st.checkbox(query_image_names[cur_idx], key=f"q-{cur_idx}")
 
 st.write(is_selected)
 
