@@ -133,7 +133,7 @@ if st.button("Search"):
                 cur_idx = i*col_size + j
                 if (cur_idx >= len(result_shot_path)):
                     continue
-                st.image(result_shot_path[cur_idx])
+                st.video(result_shot_path[cur_idx])
 
 
 
