@@ -122,8 +122,8 @@ if st.button("Search"):
     grid = [st.columns(col_size) for i in range(math.ceil(len(result_images)/col_size))]
     result_movie_path = os.path.join(shot_path, selected_movie)
     scene_names = [image.split('-')[0] for image in result_images]
-    result_scene_path = [os.path.join(result_movie_path, scene) for scene in scene_names]
-    result_shot_path = [os.path.join(result_scene_path, shot_name + ".webm") for shot_name in result_images]
+    result_scene_path = [os.path.join(result_movie_path[i], scene_names[i]) for i  in range(len(scene_names))]
+    result_shot_path = [os.path.join(result_scene_path[i], result_images[i] + ".webm") for i  in range(len(result_images))]
     
 
     cols = st.columns(len(result_shot_path))
