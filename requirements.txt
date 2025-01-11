@@ -6,3 +6,5 @@ CLIP @ git+https://github.com/openai/CLIP.git
 matplotlib
 scikit-learn
 transformers
+opencv-python
+tf-keras
