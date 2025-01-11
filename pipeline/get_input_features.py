@@ -39,4 +39,6 @@ def get_input_features(list_query, feature_with_face, feature_without_face, gene
   #   elif feature_without_face == 'BEiT':
   #     input_features_without_face = torch.cat(input_features_without_face, dim=0).numpy()
 
+  input_features_with_face = np.array(input_features_with_face)
+  input_features_without_face = np.array(input_features_without_face)
   return input_features_with_face, input_features_without_face

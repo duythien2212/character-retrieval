@@ -1,3 +1,5 @@
+import numpy as np
+
 def merge_sort_by_distance(results, D):
   combined = []
   for query_distances, query_indices in zip(D, results):
