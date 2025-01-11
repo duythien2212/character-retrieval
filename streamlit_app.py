@@ -120,17 +120,20 @@ if st.button("Search"):
     result_images = search()
     # st.write("Why hello there")
     grid = [st.columns(col_size) for i in range(math.ceil(len(result_images)/col_size))]
-    movie_shot_path = os.path.join(shot_path, selected_movie)
-    st.write(result_images)
+    result_movie_path = os.path.join(shot_path, selected_movie)
+    scene_names = [result_images.split('-')[0]]
+    result_scene_path = [os.path.join(result_movie_path, scene) for scene in scene_names]
+    result_shot_path = [os.path.join(result_scene_path, shot_name + ".webm") for shot_name in result_images]
+    
 
-    cols = st.columns(len(result_images))
+    cols = st.columns(len(result_shot_path))
     for i in range(len(grid)):
         for j in range(col_size):
             with grid[i][j]:
                 cur_idx = i*col_size + j
-                if (cur_idx >= len(result_images)):
+                if (cur_idx >= len(result_shot_path)):
                     continue
-                st.image(result_images[cur_idx])
+                st.image(result_shot_path[cur_idx])
 
 
 
