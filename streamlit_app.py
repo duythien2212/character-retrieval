@@ -14,6 +14,8 @@ import pickle
 import matplotlib.pyplot as plt
 from collections import Counter
 from sklearn.metrics import auc
+from pipeline.retrieval import Retrieval
+from merge.merge_by_distance import merge_sort_by_distance
 
 query_path = "./query"
 
@@ -43,6 +45,14 @@ with st.sidebar:
         "Select face feature types",
         face_feature_types,
     )
+
+    # Select face feature types
+    non_face_feature_types = ["CLIP", "BEiT"]
+    selected_non_face_feature_type = st.selectbox(
+        "Select image feature types",
+        non_face_feature_types,
+    )
+
 
     # Select top_k result
     top_k = 5
@@ -95,18 +105,34 @@ result_images = ["images/cat1.jpeg",
 # row_len = [col_size for i in range(math.ceil(len(images)/col_size))]
 # st.write(row_len)
 
+def search():
+    retrieval = Retrieval(query_images, selected_feature_type, selected_non_face_feature_type, film=selected_movie)
+    D_with_face, I_with_face, results_with_face = retrieval.search_with_face(top_k)
+    D_without_face, I_without_face, results_without_face = retrieval.search_without_face(top_k)
+    if results_with_face is None:
+        results_by_distance =  merge_sort_by_distance(results_without_face, D_without_face)
+    elif results_without_face is None:
+        results_by_distance =  merge_sort_by_distance(results_with_face, D_with_face)
+    else:
+        results_by_distance = merge_sort_by_distance(np.concatenate((results_with_face, results_without_face)), np.concatenate((D_with_face, D_without_face)))
 
+    results_by_distance = [x for x in results_by_distance if x != 'No shot']
+    
+    result_images = results_by_distance
 
-grid = [st.columns(col_size) for i in range(math.ceil(len(result_images)/col_size))]
+if st.button("Search"):
+    search()
+    # st.write("Why hello there")
+    grid = [st.columns(col_size) for i in range(math.ceil(len(result_images)/col_size))]
 
-cols = st.columns(len(result_images))
-for i in range(len(grid)):
-    for j in range(col_size):
-        with grid[i][j]:
-            cur_idx = i*col_size + j
-            if (cur_idx >= len(result_images)):
-                continue
-            st.image(result_images[cur_idx])
+    cols = st.columns(len(result_images))
+    for i in range(len(grid)):
+        for j in range(col_size):
+            with grid[i][j]:
+                cur_idx = i*col_size + j
+                if (cur_idx >= len(result_images)):
+                    continue
+                st.image(result_images[cur_idx])
 
 
 

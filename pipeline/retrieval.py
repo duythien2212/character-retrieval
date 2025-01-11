@@ -4,9 +4,9 @@ from extract_feature.normalize_data import normalize_data
 import numpy as np
 
 class Retrieval:
-    def __init__(self, list_query, feature_with_face="Facenet", feature_without_face="BEiT", remove_type="Compare", general=True):
+    def __init__(self, list_query, feature_with_face="Facenet", feature_without_face="BEiT", remove_type="Compare", general=True, project_path="/content/drive/MyDrive/TRECVID", film="like_me"):
         self.input_features_with_face, self.input_features_without_face = get_input_features(list_query, feature_with_face, feature_without_face, general=general)
-        self.index_with_face, self.map_index_with_face, self.index_without_face, self.map_index_without_face = get_database(feature_with_face, feature_without_face, general, remove_type)
+        self.index_with_face, self.map_index_with_face, self.index_without_face, self.map_index_without_face = get_database(feature_with_face, feature_without_face, general, remove_type, project_path, film)
 
     def search_with_face(self, k):
         if self.input_features_with_face.shape[0] > 0:
@@ -27,6 +27,8 @@ class Retrieval:
         else:
             D_with_face, I_with_face = None, None
             results_with_face = None
+        
+        return D_with_face, I_with_face, results_with_face
 
     def search_without_face(self, k):
         # Search without face
@@ -48,3 +50,5 @@ class Retrieval:
         else:
             D_without_face, I_without_face = None, None
             results_without_face = None
+        
+        return D_without_face, I_without_face, results_without_face
