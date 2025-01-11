@@ -18,6 +18,7 @@ from pipeline.retrieval import Retrieval
 from merge.merge_by_distance import merge_sort_by_distance
 
 query_path = "./query"
+shot_path = "/content/drive/MyDrive/TRECVID/shots"
 
 # Sidebar
 with st.sidebar:
@@ -95,12 +96,7 @@ st.write(is_selected)
 
 st.subheader("Results")
 
-result_images = ["images/cat1.jpeg", 
-          "images/cat1.jpeg", 
-          "images/cat1.jpeg", 
-          "images/cat1.jpeg", 
-          "images/cat1.jpeg",
-          "images/cat1.jpeg"]
+result_images = []
 
 # row_len = [col_size for i in range(math.ceil(len(images)/col_size))]
 # st.write(row_len)
@@ -124,6 +120,8 @@ if st.button("Search"):
     search()
     # st.write("Why hello there")
     grid = [st.columns(col_size) for i in range(math.ceil(len(result_images)/col_size))]
+    movie_shot_path = os.path.join(shot_path, selected_movie)
+    st.write(result_images)
 
     cols = st.columns(len(result_images))
     for i in range(len(grid)):
