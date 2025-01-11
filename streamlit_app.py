@@ -114,10 +114,10 @@ def search():
 
     results_by_distance = [x for x in results_by_distance if x != 'No shot']
     
-    result_images = results_by_distance
+    return results_by_distance
 
 if st.button("Search"):
-    search()
+    result_images = search()
     # st.write("Why hello there")
     grid = [st.columns(col_size) for i in range(math.ceil(len(result_images)/col_size))]
     movie_shot_path = os.path.join(shot_path, selected_movie)
