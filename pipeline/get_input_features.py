@@ -11,16 +11,16 @@ def get_input_features(list_query, feature_with_face, feature_without_face, gene
       # img = Image.open(image_path)
       # img = np.asarray(img)
       image = Image.open(image_path).convert('RGB')
-      faces_features = DeepFace.represent(np.array(image), model_name= feature_with_face, detector_backend='mtcnn',
-                                          align = False, enforce_detection=True)
+      faces_features = DeepFace.represent(image_path, model_name= feature_with_face, detector_backend='mtcnn')
       # faces_features = DeepFace.represent(image_path, model_name= feature_with_face, detector_backend='mtcnn')
       if len(faces_features) > 1:
         print("Face not clear")
       for face_features in faces_features:
         input_features_with_face.append(face_features['embedding'])
+        # print(face_features['embedding'])
 
     except Exception as e:
-      print(f"Query {i+1} can't be detected face!")
+      print(f"Query {i+1} can't be detected face!", e)
       cant_detect_face_paths.append(image_path)
 
     if cant_detect_face_paths:

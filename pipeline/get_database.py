@@ -4,12 +4,21 @@ import pickle
 
 def get_database(feature_with_face, feature_without_face, general, remove_type, project_path, film):
   film_path = os.path.join(project_path, 'Group_Duy_Thang', 'index', film)
-  database_with_face_path = os.path.join(film_path, 'with face', f'{feature_with_face}_{remove_type}.pkl')
-
-  if general:
-    database_without_face_path = os.path.join(film_path, 'without face', f'{feature_without_face}_s_{remove_type}.pkl' if feature_without_face == 'BEiT' else f'{feature_without_face}_rn_{remove_type}.pkl')
+  if remove_type == '':
+    database_with_face_path = os.path.join(film_path, 'With_Face', f'{feature_with_face}.pkl')
   else:
-    database_without_face_path = os.path.join(film_path, 'without face', f'{feature_without_face}_{remove_type}.pkl')
+    database_with_face_path = os.path.join(film_path, 'With_Face', f'{feature_with_face}_{remove_type}.pkl')
+
+  if remove_type == '':
+    if general:
+      database_without_face_path = os.path.join(film_path, 'Without_Face_All', f'{feature_without_face}_s.pkl' if feature_without_face == 'BEiT' else f'{feature_without_face}_rn.pkl')
+    else:
+      database_without_face_path = os.path.join(film_path, 'Without_Face_All', f'{feature_without_face}.pkl')
+  else:
+    if general:
+      database_without_face_path = os.path.join(film_path, 'Without_Face_All', f'{feature_without_face}_s_{remove_type}.pkl' if feature_without_face == 'BEiT' else f'{feature_without_face}_rn_{remove_type}.pkl')
+    else:
+      database_without_face_path = os.path.join(film_path, 'Without_Face_All', f'{feature_without_face}_{remove_type}.pkl')
 
   print(database_with_face_path)
   print(database_without_face_path)
