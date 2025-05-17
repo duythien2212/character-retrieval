@@ -32,8 +32,10 @@ with st.sidebar:
 
     # Select movie
     movies = os.listdir(QUERY_PATH)
+    selected_movie = "Archipelago"
     selected_movie = st.selectbox(
         "Select movie",
+        value=selected_movie,
         movies,
     )
     movie_path = os.path.join(QUERY_PATH, selected_movie)
@@ -48,15 +50,19 @@ with st.sidebar:
 
     # Select face feature types
     face_feature_types = ["Facenet", "Arcface"]
+    selected_feature_type = "Facenet"
     selected_feature_type = st.selectbox(
         "Select face feature types",
+        value=selected_feature_type,
         face_feature_types,
     )
 
     # Select face feature types
     non_face_feature_types = ["CLIP", "BEiT"]
+    selected_non_face_feature_type = "BEiT"
     selected_non_face_feature_type = st.selectbox(
         "Select image feature types",
+        value=selected_non_face_feature_type,
         non_face_feature_types,
     )
 
@@ -65,25 +71,33 @@ with st.sidebar:
 
     # Select remove type
     remove_types = ["Compare", "DBSCAN", ""]
+    selected_remove_type = "Compare"
     selected_remove_type = st.selectbox(
         "Select remove type",
+        value=selected_remove_type,
         remove_types,
     )
 
     # Select merge type
     merge_types = ["no", "Distance", "Counter", "Ranx"]
+    selected_merge_type = "Ranx"
     selected_merge_type = st.selectbox(
         "Select merge type",
+        value=selected_merge_type,
         merge_types,
     )
 
     # Select top_k result
-    top_k = 5
+    top_k = 20
     top_k = st.number_input("Select top_k result", min_value=1, value=top_k, key="top_k")
 
     # Select column size
-    col_size = 5
-    col_size = st.number_input("Select column size", min_value=1, value=col_size, key="col_size")
+    q_col_size = 5
+    q_col_size = st.number_input("Select query column size", min_value=1, value=q_col_size, key="col_size")
+
+    # Select column size
+    r_col_size = 3
+    r_col_size = st.number_input("Select result column size", min_value=1, value=r_col_size, key="col_size")
 
 # Main
 st.title("Movie character retrieval")
@@ -99,16 +113,16 @@ query_images = [os.path.join(character_path, img_name) for img_name in query_ima
 # row_len = [col_size for i in range(math.ceil(len(images)/col_size))]
 # st.write(row_len)
 
-grid = [st.columns(col_size) for i in range(math.ceil(len(query_images)/col_size))]
+grid = [st.columns(q_col_size) for i in range(math.ceil(len(query_images)/q_col_size))]
 
 cols = st.columns(len(query_images))
 
 is_selected = [False for i in range(len(query_images))]
 
 for i in range(len(grid)):
-    for j in range(col_size):
+    for j in range(q_col_size):
         with grid[i][j]:
-            cur_idx = i*col_size + j
+            cur_idx = i*q_col_size + j
             if (cur_idx >= len(query_images)):
                 continue
             st.image(query_images[cur_idx])
@@ -137,18 +151,18 @@ def search():
 if st.button("Search"):
     result_images = search()
     # st.write("Why hello there")
-    grid = [st.columns(col_size) for i in range(math.ceil(len(result_images)/col_size))]
+    grid = [st.columns(r_col_size) for i in range(math.ceil(len(result_images)/r_col_size))]
     result_movie_path = os.path.join(SHOT_PATH, selected_movie)
     scene_names = [image.split('-')[0] + "-" + image.split('-')[1] for image in result_images]
     result_scene_path = [os.path.join(result_movie_path, scene_names[i]) for i in range(len(scene_names))]
     result_shot_path = [os.path.join(result_scene_path[i], result_images[i] + ".webm") for i in range(len(result_images))]
 
 
-    cols = st.columns(len(result_shot_path))
+    cols = st.columns(len(result_shot_path[:top_k]))
     for i in range(len(grid)):
-        for j in range(col_size):
+        for j in range(r_col_size):
             with grid[i][j]:
-                cur_idx = i*col_size + j
+                cur_idx = i*r_col_size + j
                 if (cur_idx >= len(result_shot_path)):
                     continue
                 st.video(result_shot_path[cur_idx])
