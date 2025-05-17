@@ -19,7 +19,7 @@ from merge.merge_result import merge_result
 
 # Path configuration
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-QUERY_PATH = os.path.join(BASE_DIR, "query")
+QUERY_PATH = "/content/drive/MyDrive/TRECVID/query"
 SHOT_PATH = "/content/drive/MyDrive/TRECVID/shots"
 PROJECT_PATH = "/content/drive/MyDrive/TRECVID"
 DATABASE_PATH = os.path.join(PROJECT_PATH, "Group_Duy_Thang", "Features")
@@ -114,7 +114,7 @@ for i in range(len(grid)):
             st.image(query_images[cur_idx])
             is_selected[cur_idx] = st.checkbox(query_image_names[cur_idx], key=f"q-{cur_idx}")
 
-st.write(is_selected)
+# st.write(is_selected)
 
 st.subheader("Results")
 
