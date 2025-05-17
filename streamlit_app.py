@@ -17,20 +17,26 @@ from sklearn.metrics import auc
 from pipeline.retrieval import Retrieval
 from merge.merge_result import merge_result
 
-query_path = "./query"
-shot_path = "/content/drive/MyDrive/TRECVID/shots"
+# Path configuration
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+QUERY_PATH = os.path.join(BASE_DIR, "query")
+SHOT_PATH = "/content/drive/MyDrive/TRECVID/shots"
+PROJECT_PATH = "/content/drive/MyDrive/TRECVID"
+DATABASE_PATH = os.path.join(PROJECT_PATH, "Group_Duy_Thang", "Features")
+INDEX_PATH = os.path.join(PROJECT_PATH, "Group_Duy_Thang", "index")
+GROUND_TRUTH_PATH = os.path.join(PROJECT_PATH, "Group_Duy_Thang", "ground-truth")
 
 # Sidebar
 with st.sidebar:
     st.write("Select input image query")
 
     # Select movie
-    movies = os.listdir(query_path)
+    movies = os.listdir(QUERY_PATH)
     selected_movie = st.selectbox(
         "Select movie",
         movies,
     )
-    movie_path = os.path.join(query_path, selected_movie)
+    movie_path = os.path.join(QUERY_PATH, selected_movie)
 
     # Select character
     characters = os.listdir(movie_path)
@@ -119,7 +125,8 @@ result_images = []
 
 def search():
     retrieval = Retrieval(query_images, selected_feature_type, selected_non_face_feature_type,
-                         remove_type=selected_remove_type, general=general_option, film=selected_movie)
+                         remove_type=selected_remove_type, general=general_option,
+                         project_path=PROJECT_PATH, film=selected_movie)
     D_with_face, I_with_face, results_with_face = retrieval.search_with_face(top_k)
     D_without_face, I_without_face, results_without_face = retrieval.search_without_face(top_k)
 
@@ -131,10 +138,10 @@ if st.button("Search"):
     result_images = search()
     # st.write("Why hello there")
     grid = [st.columns(col_size) for i in range(math.ceil(len(result_images)/col_size))]
-    result_movie_path = os.path.join(shot_path, selected_movie)
+    result_movie_path = os.path.join(SHOT_PATH, selected_movie)
     scene_names = [image.split('-')[0] + "-" + image.split('-')[1] for image in result_images]
-    result_scene_path = [os.path.join(result_movie_path[i], scene_names[i]) for i  in range(len(scene_names))]
-    result_shot_path = [os.path.join(result_scene_path[i], result_images[i] + ".webm") for i  in range(len(result_images))]
+    result_scene_path = [os.path.join(result_movie_path, scene_names[i]) for i in range(len(scene_names))]
+    result_shot_path = [os.path.join(result_scene_path[i], result_images[i] + ".webm") for i in range(len(result_images))]
 
 
     cols = st.columns(len(result_shot_path))
