@@ -140,8 +140,10 @@ def search():
     return results
 
 is_search = st.button("Search")
+result_images = []
 if is_search:
     result_images = search()
+    result_images = result_images[:top_k]
     # st.write("Why hello there")
     grid = [st.columns(r_col_size) for i in range(math.ceil(len(result_images)/r_col_size))]
     result_movie_path = os.path.join(SHOT_PATH, selected_movie)
@@ -150,7 +152,7 @@ if is_search:
     result_shot_path = [os.path.join(result_scene_path[i], result_images[i] + ".webm") for i in range(len(result_images))]
 
 
-    cols = st.columns(len(result_shot_path[:top_k]))
+    cols = st.columns(len(result_shot_path))
     for i in range(len(grid)):
         for j in range(r_col_size):
             with grid[i][j]:
