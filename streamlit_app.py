@@ -19,7 +19,7 @@ from merge.merge_result import merge_result
 
 # Path configuration
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-QUERY_PATH = "/content/drive/MyDrive/TRECVID/query"
+QUERY_PATH = "/content/drive/MyDrive/TRECVID/query2024"
 SHOT_PATH = "/content/drive/MyDrive/TRECVID/shots"
 PROJECT_PATH = "/content/drive/MyDrive/TRECVID"
 DATABASE_PATH = os.path.join(PROJECT_PATH, "Group_Duy_Thang", "Features")
