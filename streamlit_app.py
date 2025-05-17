@@ -139,7 +139,8 @@ def search():
 
     return results
 
-if st.button("Search"):
+is_search = st.button("Search")
+if is_search:
     result_images = search()
     # st.write("Why hello there")
     grid = [st.columns(r_col_size) for i in range(math.ceil(len(result_images)/r_col_size))]
