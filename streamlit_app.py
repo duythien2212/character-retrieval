@@ -108,7 +108,7 @@ grid = [st.columns(q_col_size) for i in range(math.ceil(len(query_images)/q_col_
 
 cols = st.columns(len(query_images))
 
-is_selected = [False for i in range(len(query_images))]
+is_selected = [True for i in range(len(query_images))]
 
 for i in range(len(grid)):
     for j in range(q_col_size):
@@ -123,7 +123,7 @@ for i in range(len(grid)):
 
 st.subheader("Results")
 
-result_images = []
+result_images = ["" for i in range(top_k)]
 
 # row_len = [col_size for i in range(math.ceil(len(images)/col_size))]
 # st.write(row_len)
