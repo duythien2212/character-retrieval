@@ -32,10 +32,8 @@ with st.sidebar:
 
     # Select movie
     movies = os.listdir(QUERY_PATH)
-    selected_movie = "Archipelago"
     selected_movie = st.selectbox(
         "Select movie",
-        value=selected_movie,
         movies,
     )
     movie_path = os.path.join(QUERY_PATH, selected_movie)
@@ -50,19 +48,15 @@ with st.sidebar:
 
     # Select face feature types
     face_feature_types = ["Facenet", "Arcface"]
-    selected_feature_type = "Facenet"
     selected_feature_type = st.selectbox(
         "Select face feature types",
-        value=selected_feature_type,
         face_feature_types,
     )
 
     # Select face feature types
     non_face_feature_types = ["CLIP", "BEiT"]
-    selected_non_face_feature_type = "BEiT"
     selected_non_face_feature_type = st.selectbox(
         "Select image feature types",
-        value=selected_non_face_feature_type,
         non_face_feature_types,
     )
 
@@ -71,19 +65,16 @@ with st.sidebar:
 
     # Select remove type
     remove_types = ["Compare", "DBSCAN", ""]
-    selected_remove_type = "Compare"
     selected_remove_type = st.selectbox(
         "Select remove type",
-        value=selected_remove_type,
         remove_types,
     )
 
     # Select merge type
     merge_types = ["no", "Distance", "Counter", "Ranx"]
-    selected_merge_type = "Ranx"
+    
     selected_merge_type = st.selectbox(
         "Select merge type",
-        value=selected_merge_type,
         merge_types,
     )
 
