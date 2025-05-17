@@ -140,7 +140,9 @@ def search():
     return results
 
 is_search = st.button("Search")
-result_images = []
+
+result_images = ["" for i in range(top_k)]
+st.write(result_images)
 if is_search:
     result_images = search()
     result_images = result_images[:top_k]
