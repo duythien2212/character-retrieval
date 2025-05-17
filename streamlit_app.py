@@ -84,11 +84,11 @@ with st.sidebar:
 
     # Select column size
     q_col_size = 5
-    q_col_size = st.number_input("Select query column size", min_value=1, value=q_col_size, key="col_size")
+    q_col_size = st.number_input("Select query column size", min_value=1, value=q_col_size, key="q_col_size")
 
     # Select column size
     r_col_size = 3
-    r_col_size = st.number_input("Select result column size", min_value=1, value=r_col_size, key="col_size")
+    r_col_size = st.number_input("Select result column size", min_value=1, value=r_col_size, key="r_col_size")
 
 # Main
 st.title("Movie character retrieval")
