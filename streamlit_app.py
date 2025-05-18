@@ -47,7 +47,7 @@ with st.sidebar:
     character_path = os.path.join(movie_path, selected_character)
 
     # Select face feature types
-    face_feature_types = ["Facenet", "Arcface"]
+    face_feature_types = ["Facenet", "ArcFace"]
     selected_feature_type = st.selectbox(
         "Select face feature types",
         face_feature_types,
