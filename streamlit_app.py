@@ -180,10 +180,9 @@ is_search = st.button("Search")
 if is_search:
     result_images = search()
     st.session_state.result_images = result_images  # Save to session_state
-    result_images = result_images[:top_k]
 
 # Always use the session_state result_images for display
-result_images = st.session_state.result_images
+result_images = st.session_state.result_images[:top_k]
 result_shot_path = []
 
 if result_images[0] != "":
