@@ -122,12 +122,12 @@ class RetrievalModel():
     D_without_face = []
 
     if self.face_database is not None and self.face_database.get('index') is not None and face_embeddings is not None and face_embeddings.shape[0] > 0:
-      D_with_face, I_with_face = self.face_database['index'].search(normalize_data(face_embeddings), k)
+      D_with_face, I_with_face = self.face_database['index'].search(normalize_data.normalize_data(face_embeddings), k)
       for query_index in I_with_face:
         results_with_face.append([self.face_database['map_index'][i] for i in query_index])
 
     if self.non_face_database is not None and self.non_face_database.get('index') is not None and non_face_embeddings is not None and non_face_embeddings.shape[0] > 0:
-      D_without_face, I_without_face = self.non_face_database['index'].search(normalize_data(non_face_embeddings), k)
+      D_without_face, I_without_face = self.non_face_database['index'].search(normalize_data.normalize_data(non_face_embeddings), k)
       for query_index in I_without_face:
         results_without_face.append([self.non_face_database['map_index'][i] for i in query_index])
 
