@@ -193,15 +193,15 @@ if result_images[0] != "":
     result_scene_path = [os.path.join(result_movie_path, scene_names[i]) for i in range(len(scene_names))]
     result_shot_path = [os.path.join(result_scene_path[i], result_images[i] + ".webm") for i in range(len(result_images))]
 
-
-cols = st.columns(len(result_shot_path))
-for i in range(len(grid)):
-    for j in range(r_col_size):
-        with grid[i][j]:
-            cur_idx = i*r_col_size + j
-            if (cur_idx >= len(result_shot_path)):
-                continue
-            st.video(result_shot_path[cur_idx])
+if result_images[0] != "":
+    cols = st.columns(len(result_shot_path))
+    for i in range(len(grid)):
+        for j in range(r_col_size):
+            with grid[i][j]:
+                cur_idx = i*r_col_size + j
+                if (cur_idx >= len(result_shot_path)):
+                    continue
+                st.video(result_shot_path[cur_idx])
 
 
 
