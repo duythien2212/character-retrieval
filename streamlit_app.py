@@ -146,7 +146,11 @@ for i in range(len(grid)):
 
 st.subheader("Results")
 
-result_images = ["" for i in range(top_k)]
+# Store result_images in session_state for persistence
+if "result_images" not in st.session_state:
+    st.session_state.result_images = [""] * top_k
+
+result_images = st.session_state.result_images
 
 # row_len = [col_size for i in range(math.ceil(len(images)/col_size))]
 # st.write(row_len)
@@ -176,22 +180,25 @@ is_search = st.button("Search")
 if is_search:
     result_images = search()
     result_images = result_images[:top_k]
-    # st.write("Why hello there")
-    grid = [st.columns(r_col_size) for i in range(math.ceil(len(result_images)/r_col_size))]
-    result_movie_path = os.path.join(SHOT_PATH, selected_movie)
-    scene_names = [image.split('-')[0] + "-" + image.split('-')[1] for image in result_images]
-    result_scene_path = [os.path.join(result_movie_path, scene_names[i]) for i in range(len(scene_names))]
-    result_shot_path = [os.path.join(result_scene_path[i], result_images[i] + ".webm") for i in range(len(result_images))]
+    st.session_state.result_images = result_images  # Save to session_state
+
+# Always use the session_state result_images for display
+result_images = st.session_state.result_images
+grid = [st.columns(r_col_size) for i in range(math.ceil(len(result_images)/r_col_size))]
+result_movie_path = os.path.join(SHOT_PATH, selected_movie)
+scene_names = [image.split('-')[0] + "-" + image.split('-')[1] for image in result_images]
+result_scene_path = [os.path.join(result_movie_path, scene_names[i]) for i in range(len(scene_names))]
+result_shot_path = [os.path.join(result_scene_path[i], result_images[i] + ".webm") for i in range(len(result_images))]
 
 
-    cols = st.columns(len(result_shot_path))
-    for i in range(len(grid)):
-        for j in range(r_col_size):
-            with grid[i][j]:
-                cur_idx = i*r_col_size + j
-                if (cur_idx >= len(result_shot_path)):
-                    continue
-                st.video(result_shot_path[cur_idx])
+cols = st.columns(len(result_shot_path))
+for i in range(len(grid)):
+    for j in range(r_col_size):
+        with grid[i][j]:
+            cur_idx = i*r_col_size + j
+            if (cur_idx >= len(result_shot_path)):
+                continue
+            st.video(result_shot_path[cur_idx])
 
 
 
