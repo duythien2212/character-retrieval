@@ -184,6 +184,8 @@ if is_search:
 
 # Always use the session_state result_images for display
 result_images = st.session_state.result_images
+result_shot_path = []
+
 if result_images[0] != "":
     grid = [st.columns(r_col_size) for i in range(math.ceil(len(result_images)/r_col_size))]
     result_movie_path = os.path.join(SHOT_PATH, selected_movie)
