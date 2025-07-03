@@ -184,11 +184,12 @@ if is_search:
 
 # Always use the session_state result_images for display
 result_images = st.session_state.result_images
-grid = [st.columns(r_col_size) for i in range(math.ceil(len(result_images)/r_col_size))]
-result_movie_path = os.path.join(SHOT_PATH, selected_movie)
-scene_names = [image.split('-')[0] + "-" + image.split('-')[1] for image in result_images]
-result_scene_path = [os.path.join(result_movie_path, scene_names[i]) for i in range(len(scene_names))]
-result_shot_path = [os.path.join(result_scene_path[i], result_images[i] + ".webm") for i in range(len(result_images))]
+if result_images[0] != "":
+    grid = [st.columns(r_col_size) for i in range(math.ceil(len(result_images)/r_col_size))]
+    result_movie_path = os.path.join(SHOT_PATH, selected_movie)
+    scene_names = [image.split('-')[0] + "-" + image.split('-')[1] for image in result_images]
+    result_scene_path = [os.path.join(result_movie_path, scene_names[i]) for i in range(len(scene_names))]
+    result_shot_path = [os.path.join(result_scene_path[i], result_images[i] + ".webm") for i in range(len(result_images))]
 
 
 cols = st.columns(len(result_shot_path))
