@@ -43,7 +43,7 @@ with st.sidebar:
     character_path = os.path.join(movie_path, selected_character)
 
     # Select face feature types
-    face_models = [FaceNet(), ArcFace()]
+    face_models = [FaceNet, ArcFace]
     selected_face_model = face_models[0]
 
     face_feature_types = ["Facenet", "ArcFace"]
@@ -54,7 +54,7 @@ with st.sidebar:
     )
 
     # Select face feature types
-    non_face_models = [BEiT(), CLIP()]
+    non_face_models = [BEiT, CLIP]
     selected_non_face_model = non_face_models[0]
 
     non_face_feature_types = ["CLIP", "BEiT"]
@@ -74,7 +74,7 @@ with st.sidebar:
     )
 
     # Select merge type
-    merge_models = [MergeByCounter(), MergeByDistance(), MergeByRank(), MergeByRanx()]
+    merge_models = [MergeByCounter, MergeByDistance, MergeByRank, MergeByRanx]
     selected_merge_model = merge_models[0]
     merge_types = ["Counter", "Distance", "Rank", "Ranx"]
     
@@ -129,12 +129,12 @@ result_images = ["" for i in range(top_k)]
 # st.write(row_len)
 
 def search():
-    char_db_path = os.path.join(DATABASE_PATH, selected_movie)
+    char_db_path = os.path.join(INDEX_PATH, selected_movie)
     retrieval_model = RetrievalModel(
             char_db_path, 
-            selected_face_model,
-            selected_non_face_model,
-            selected_merge_model,
+            selected_face_model(),
+            selected_non_face_model(),
+            selected_merge_model(),
             None
           )
     retrieval_model.load_database(char_db_path, general_option, selected_remove_type)
