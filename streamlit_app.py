@@ -2,20 +2,16 @@ import streamlit as st
 from streamlit_image_select import image_select
 import math
 import os
-import torch
-from deepface import DeepFace
-from PIL import Image
-import pandas as pd
-import numpy as np
-import faiss
-from sklearn.cluster import DBSCAN
-from sklearn.metrics.pairwise import cosine_similarity
-import pickle
-import matplotlib.pyplot as plt
-from collections import Counter
 from sklearn.metrics import auc
-from pipeline.retrieval import Retrieval
-from merge.merge_result import merge_result
+from extract_feature.arcface import ArcFace
+from extract_feature.beit import BEiT
+from extract_feature.clip import CLIP
+from extract_feature.facenet import FaceNet
+from merge.merge_by_counter import MergeByCounter
+from merge.merge_by_distance import MergeByDistance
+from merge.merge_by_rank import MergeByRank
+from merge.merge_by_ranx import MergeByRanx
+from retrieval.retrieval import RetrievalModel
 
 # Path configuration
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -47,13 +43,20 @@ with st.sidebar:
     character_path = os.path.join(movie_path, selected_character)
 
     # Select face feature types
+    face_models = [FaceNet(), ArcFace()]
+    selected_face_model = face_models[0]
+
     face_feature_types = ["Facenet", "ArcFace"]
     selected_feature_type = st.selectbox(
         "Select face feature types",
         face_feature_types,
+        key="face_model",
     )
 
     # Select face feature types
+    non_face_models = [BEiT(), CLIP()]
+    selected_non_face_model = non_face_models[0]
+
     non_face_feature_types = ["CLIP", "BEiT"]
     selected_non_face_feature_type = st.selectbox(
         "Select image feature types",
@@ -71,7 +74,9 @@ with st.sidebar:
     )
 
     # Select merge type
-    merge_types = ["no", "Distance", "Counter", "Ranx"]
+    merge_models = [MergeByCounter(), MergeByDistance(), MergeByRank(), MergeByRanx()]
+    selected_merge_model = merge_models[0]
+    merge_types = ["Counter", "Distance", "Rank", "Ranx"]
     
     selected_merge_type = st.selectbox(
         "Select merge type",
@@ -99,11 +104,6 @@ st.subheader("Image query")
 query_image_names = os.listdir(character_path)
 query_images = [os.path.join(character_path, img_name) for img_name in query_image_names]
 
-# img_names = [img.split('/')[-1].split('.')[0] for img in query_images]
-
-# row_len = [col_size for i in range(math.ceil(len(images)/col_size))]
-# st.write(row_len)
-
 grid = [st.columns(q_col_size) for i in range(math.ceil(len(query_images)/q_col_size))]
 
 cols = st.columns(len(query_images))
@@ -129,13 +129,22 @@ result_images = ["" for i in range(top_k)]
 # st.write(row_len)
 
 def search():
-    retrieval = Retrieval(query_images, selected_feature_type, selected_non_face_feature_type,
-                         remove_type=selected_remove_type, general=general_option,
-                         project_path=PROJECT_PATH, film=selected_movie)
-    D_with_face, I_with_face, results_with_face = retrieval.search_with_face(top_k)
-    D_without_face, I_without_face, results_without_face = retrieval.search_without_face(top_k)
+    char_db_path = os.path.join(DATABASE_PATH, selected_movie)
+    retrieval_model = RetrievalModel(
+            char_db_path, 
+            selected_face_model,
+            selected_non_face_model,
+            selected_merge_model,
+            None
+          )
+    retrieval_model.load_database(char_db_path, general_option, selected_remove_type)
 
-    results = merge_result(results_with_face, results_without_face, D_with_face, D_without_face, type=selected_merge_type)
+    selected_queries = []
+    for i in range(len(query_images)):
+        if (is_selected[i]):
+            selected_queries.append(query_images[i])
+    
+    results = retrieval_model.retrieval(selected_queries)
 
     return results
 

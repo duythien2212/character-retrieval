@@ -1,50 +1,28 @@
-import numpy as np
-from merge.merge_by_distance import merge_sort_by_distance
-from merge.merge_by_counter import merge_sort_by_counter
-from merge.merge_by_ranx import merge_sort_by_ranx
+from abc import abstractmethod
 
-def merge_result(results_with_face, results_without_face, D_with_face, D_without_face, type='no'):
-  if type == 'no':
-    no_merge_result_1 = list(set(results_with_face.flatten())) if results_with_face is not None else []
-    no_merge_result_2 = list(set(results_without_face.flatten())) if results_without_face is not None else []
-    no_merge_result = no_merge_result_1 + no_merge_result_2
-    no_merge_result = list(set(no_merge_result))
-    no_merge_result = [x for x in no_merge_result if x != 'No shot']
-    return no_merge_result
 
-  elif type == 'Distance':
-    if results_with_face is None and results_without_face is None:
-      return []
-    if results_with_face is None:
-      results = merge_sort_by_distance(results_without_face, D_without_face)
-    elif results_without_face is None:
-      results = merge_sort_by_distance(results_with_face, D_with_face)
-    else:
-      results = merge_sort_by_distance(np.concatenate((results_with_face, results_without_face)), np.concatenate((D_with_face, D_without_face)))
-    result = [x for x in results if x != 'No shot']
-    return result
+class MergeResult():
+  def __init__(self, face_threshold = 0.75, non_face_threshold = 0.75):
+    self.face_threshold = face_threshold
+    self.non_face_threshold = non_face_threshold
 
-  elif type == 'Counter':
-    if results_with_face is None and results_without_face is None:
-      return []
-    if results_with_face is None:
-      results = merge_sort_by_counter(results_without_face)
-    elif results_without_face is None:
-      results = merge_sort_by_counter(results_with_face)
-    else:
-      results = merge_sort_by_counter(np.concatenate((results_with_face, results_without_face)))
-    result = [x for x in results if x != 'No shot']
-    return result
+  @abstractmethod
+  def merge(self, results_with_face, results_without_face, D_with_face, D_without_face):
+    pass
 
-  elif type == 'Ranx':
-    if results_with_face is None and results_without_face is None:
-      return []
-    method = 'rrf'
-    if results_with_face is None:
-      results = merge_sort_by_ranx(results_without_face, D_without_face, method)
-    elif results_without_face is None:
-      results = merge_sort_by_ranx(results_with_face, D_with_face, method)
-    else:
-      results = merge_sort_by_ranx(np.concatenate((results_with_face, results_without_face)), np.concatenate((D_with_face, D_without_face)), method)
-    result = [x for x in results if x != 'No shot']
+  def remove_duplicate(self, result):
+    rm_dup_result = dict()
+    result = list(result)
+    for query in range(len(result)):
+      for i in range(len(result[query][0])):
+        item = (result[query][0][i], result[query][1][i])
+        if (item[0] not in rm_dup_result.keys()):
+          rm_dup_result[item[0]] = item[1]
+        else:
+          rm_dup_result[item[0]] = max(rm_dup_result[item[0]], item[1])
+
+    return list(rm_dup_result.items())
+
+  def sort_result(self, result):
+    result = sorted(result, key=lambda x: x[1], reverse=True)
     return result
