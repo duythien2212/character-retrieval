@@ -179,8 +179,8 @@ is_search = st.button("Search")
 
 if is_search:
     result_images = search()
-    result_images = result_images[:top_k]
     st.session_state.result_images = result_images  # Save to session_state
+    result_images = result_images[:top_k]
 
 # Always use the session_state result_images for display
 result_images = st.session_state.result_images
