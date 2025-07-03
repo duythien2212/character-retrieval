@@ -43,25 +43,40 @@ with st.sidebar:
     character_path = os.path.join(movie_path, selected_character)
 
     # Select face feature types
-    face_models = [FaceNet, ArcFace]
-    selected_face_model = face_models[0]
+    face_models = [ArcFace, FaceNet]
+    face_feature_types = ["ArcFace", "Facenet"]
+    if "selected_face_model" not in st.session_state:
+        st.session_state.selected_face_model = face_models[0]
 
-    face_feature_types = ["Facenet", "ArcFace"]
+    def update_selected_face_model():
+        idx = face_feature_types.index(st.session_state.face_model)
+        st.session_state.selected_face_model = face_models[idx]
+
     selected_feature_type = st.selectbox(
         "Select face feature types",
         face_feature_types,
         key="face_model",
+        on_change=update_selected_face_model,
     )
+    selected_face_model = st.session_state.selected_face_model
 
-    # Select face feature types
-    non_face_models = [BEiT, CLIP]
-    selected_non_face_model = non_face_models[0]
-
+    # Select non-face feature types
+    non_face_models = [CLIP, BEiT]
     non_face_feature_types = ["CLIP", "BEiT"]
+    if "selected_non_face_model" not in st.session_state:
+        st.session_state.selected_non_face_model = non_face_models[0]
+
+    def update_selected_non_face_model():
+        idx = non_face_feature_types.index(st.session_state.non_face_model)
+        st.session_state.selected_non_face_model = non_face_models[idx]
+
     selected_non_face_feature_type = st.selectbox(
         "Select image feature types",
         non_face_feature_types,
+        key="non_face_model",
+        on_change=update_selected_non_face_model,
     )
+    selected_non_face_model = st.session_state.selected_non_face_model
 
     # Select general option
     general_option = st.checkbox("Use general features (BEiT_s, CLIP_rn)", value=True)
@@ -75,13 +90,21 @@ with st.sidebar:
 
     # Select merge type
     merge_models = [MergeByCounter, MergeByDistance, MergeByRank, MergeByRanx]
-    selected_merge_model = merge_models[0]
     merge_types = ["Counter", "Distance", "Rank", "Ranx"]
-    
+    if "selected_merge_model" not in st.session_state:
+        st.session_state.selected_merge_model = merge_models[0]
+
+    def update_selected_merge_model():
+        idx = merge_types.index(st.session_state.merge_model)
+        st.session_state.selected_merge_model = merge_models[idx]
+
     selected_merge_type = st.selectbox(
         "Select merge type",
         merge_types,
+        key="merge_model",
+        on_change=update_selected_merge_model,
     )
+    selected_merge_model = st.session_state.selected_merge_model
 
     # Select top_k result
     top_k = 20
